@@ -1,0 +1,61 @@
+<div class="d-flex justify-content-between py-3">
+  <h4>Employees</h4>
+  <button class="btn btn-primary" (click)="showAdd()">Add</button>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Address</th>
+      <th scope="col">Contact</th>
+      <th scope="col">Join Date</th>
+      <!-- <th scope="col">Anual Leave</th>
+      <th scope="col">Casual Leave</th>
+      <th scope="col">Medical Leave</th> -->
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let emp of employees">
+      <td scope="row">{{ emp.firstName }}</td>
+      <td scope="row">{{ emp.lastName }}</td>
+      <td scope="row">{{ emp.address }}</td>
+      <td scope="row">{{ emp.contact }}</td>
+      <td scope="row">{{ emp.joinDate }}</td>
+      <!-- <td scope="row text-center"><span
+          [ngClass]="[emp.takenAnualLeaveCount>emp.anualLeaveCount?'text-danger':'']">{{emp.takenAnualLeaveCount
+          }}</span>/<span>{{emp.anualLeaveCount }}   </span> </td>
+
+      <td scope="row"><span
+          [ngClass]="[emp.takenCasualLeaveCount>emp.casualLeaveCount ?'text-danger':'']">{{emp.takenCasualLeaveCount
+
+          }}</span> /{{emp.casualLeaveCount }}</td>
+
+      <td scope="row"><span [ngClass]="[emp.takenSickLeaveCount>emp.sickLeaveCount?'text-danger':'']">{{emp.takenSickLeaveCount
+      }}</span> /{{emp.sickLeaveCount }}</td> -->
+      <td scope="row d-flex" style="display: flex">
+        <div
+          (click)="onEdit(emp.id)"
+          class="mx-2"
+          data-bs-container="body"
+          data-bs-template="<div>hi</div>"
+          data-bs-toggle="popover"
+          data-bs-placement="bottom"
+          data-bs-content="Bottom popover"
+        >
+          <fa-icon
+            [icon]="faPen"
+            style="color: rgb(64, 0, 255); cursor: pointer"
+          ></fa-icon>
+        </div>
+        <div (click)="onDelete(emp.id)" class="mx-2">
+          <fa-icon
+            [icon]="faTrash"
+            style="color: rgb(255, 0, 0); cursor: pointer"
+          ></fa-icon>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

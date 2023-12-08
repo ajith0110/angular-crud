@@ -1,0 +1,131 @@
+<div class="d-flex justify-content-between py-3" style="height: 80px">
+  <div class="d-flex w-50 align-items-center">
+    <h4>Leave List</h4>
+
+    <div
+      *ngIf="isSearch"
+      class="d-flex search-shadow mx-3 w-25"
+      style="padding: 6px 8px; background: #fff; border-radius: 10px"
+    >
+      <!-- <select
+        [value]="searchOptions.empName"
+        class="form-select me-2"
+        (change)="onSearchEmp($event)"
+      >
+        <option>Select employee</option>
+        <option [value]="emp.id" *ngFor="let emp of empList">
+          {{ emp.firstName + " " + emp.lastName }}
+        </option>
+      </select> -->
+
+      <select
+        [value]="searchOptions.filteredYear"
+        class="form-select"
+        (change)="onSearch($event)"
+      >
+        <option>Select year</option>
+        <option [value]="year" *ngFor="let year of years">
+          {{ year }}
+        </option>
+      </select>
+    </div>
+    <button
+      *ngIf="isSearch"
+      (click)="onClearSearch()"
+      class="btn btn-light shadow-3"
+    >
+      Clear
+    </button>
+    <span (click)="showSearch()" class="mx-3">
+      <Button class="btn btn-info position-relative"
+        ><fa-icon style="cursor: pointer" size="lg" [icon]="faSearch"></fa-icon>
+        <span
+          *ngIf="filterCount > 0 && !isSearch"
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        >
+          {{ filterCount }}
+        </span>
+      </Button></span
+    >
+  </div>
+
+  <button
+    style="height: 2.5rem"
+    class="btn btn-primary fw-semibold"
+    (click)="onExport()"
+  >
+    Export <fa-icon class="mx-1" [icon]="faFileExport"></fa-icon>
+  </button>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Full Name</th>
+      <th scope="col">Year</th>
+      <th scope="col">Join Date</th>
+      <th scope="col">Anual Leave</th>
+
+      <th scope="col">Casual Leave</th>
+
+      <th scope="col">Medical Leave</th>
+    </tr>
+  </thead>
+
+  <tbody class="table">
+    <tr *ngFor="let leave of filteredData" style="vertical-align: middle">
+      <td>{{ leave.fullName }}</td>
+      <td>{{ leave.year }}</td>
+      <td>{{ leave.joinDate }}</td>
+      <td>
+        <circle-progress
+          [percent]="(leave.takenLeave / leave.anualLeave) * 100"
+          [radius]="25"
+          [outerStrokeWidth]="5"
+          [innerStrokeWidth]="2"
+          titleFontSize="15"
+          [title]="leave.takenLeave + '/' + leave.anualLeave"
+          [outerStrokeColor]="
+            leave.takenLeave >= leave.anualLeave ? 'red' : '#ff860d'
+          "
+          [innerStrokeColor]="'#C7E596'"
+          [animation]="true"
+          [animationDuration]="500"
+        ></circle-progress>
+      </td>
+
+      <td>
+        <circle-progress
+          [percent]="(leave.takenCasualLeave / leave.casualLeave) * 100"
+          [radius]="25"
+          [outerStrokeWidth]="5"
+          [innerStrokeWidth]="2"
+          titleFontSize="15"
+          [title]="leave.takenCasualLeave + '/' + leave.casualLeave"
+          [outerStrokeColor]="
+            leave.takenCasualLeave >= leave.casualLeave ? 'red' : '#0d56ff'
+          "
+          [innerStrokeColor]="'#C7E596'"
+          [animation]="true"
+          [animationDuration]="500"
+        ></circle-progress>
+      </td>
+
+      <td>
+        <circle-progress
+          [percent]="(leave.takenMedicalLeave / leave.medicalLeave) * 100"
+          [radius]="25"
+          [outerStrokeWidth]="5"
+          [innerStrokeWidth]="2"
+          titleFontSize="15"
+          [title]="leave.takenMedicalLeave + '/' + leave.medicalLeave"
+          [outerStrokeColor]="
+            leave.takenMedicalLeave >= leave.medicalLeave ? 'red' : '#05b302'
+          "
+          [innerStrokeColor]="'#C7E596'"
+          [animation]="true"
+          [animationDuration]="500"
+        ></circle-progress>
+      </td>
+    </tr>
+  </tbody>
+</table>

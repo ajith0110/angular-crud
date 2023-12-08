@@ -1,0 +1,214 @@
+<div class="container">
+  <div class="d-flex justify-content-between py-3">
+    <h4>Leaves</h4>
+    <div></div>
+  </div>
+  <div class="d-flex justify-content-center">
+    <div class="w-50 bg-light rounded-2 shadow-5 px-3 py-3">
+      <form
+        [formGroup]="leaveForm"
+        (change)="onFormChange($event)"
+        (ngSubmit)="onSave()"
+        [noValidate]="false"
+      >
+        <p></p>
+        <div class="mb-3">
+          <label for="employeeId" class="form-label"
+            >Select emloyee <span class="text-danger">*</span></label
+          >
+          <select
+            class="form-select"
+            name="employeeId"
+            aria-label="Default select example"
+            (ngModelChange)="onEmpChanges($event)"
+            required
+            id="employeeId"
+            formControlName="employeeId"
+          >
+            <option>Select employee</option>
+            <option [value]="emp.id" *ngFor="let emp of employeeList">
+              {{ emp.firstName + " " + emp.lastName }}
+            </option>
+          </select>
+          <div
+            class="text-danger"
+            *ngIf="leaveForm.touched && employeeId.invalid"
+          >
+            Employee must be selected
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="leaveType" class="form-label"
+            >Leave Type <span class="text-danger">*</span></label
+          >
+          <div class="row">
+            <div class="col">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  (ngModelChange)="onTypeChanges($event)"
+                  name="leaveType"
+                  id="leaveType"
+                  value="CASUAL_LEAVE"
+                  formControlName="leaveType"
+                  appDisableWeekend="true"
+                />
+                <label class="form-check-label" for="inlineRadio1"
+                  >Casual Leave</label
+                >
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  (ngModelChange)="onTypeChanges($event)"
+                  type="radio"
+                  name="leaveType"
+                  id="leaveType"
+                  value="SICK_LEAVE"
+                  formControlName="leaveType"
+                />
+                <label class="form-check-label" for="inlineRadio3"
+                  >Sick Leave</label
+                >
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  (ngModelChange)="onTypeChanges($event)"
+                  type="radio"
+                  name="leaveType"
+                  id="leaveType"
+                  value="ANUAL_LEAVE"
+                  formControlName="leaveType"
+                />
+                <label class="form-check-label" for="inlineRadio2"
+                  >Anual Leave</label
+                >
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="text-danger"
+            *ngIf="leaveForm.touched && leaveType.invalid"
+          >
+            You must choose leave type
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="from" class="form-label"
+              >From <span class="text-danger">*</span></label
+            >
+            <input
+              (ngModelChange)="onFromChanges($event)"
+              required
+              type="date"
+              class="form-control"
+              id="from"
+              formControlName="from"
+            />
+            <div class="text-danger" *ngIf="leaveForm.touched && from.invalid">
+              From date is required
+            </div>
+          </div>
+          <div class="col">
+            <label for="to" class="form-label"
+              >To <span class="text-danger">*</span></label
+            >
+            <input
+              (ngModelChange)="onToChanges($event)"
+              required
+              type="date"
+              [min]="11 / 11 / 2023"
+              class="form-control"
+              id="to"
+              formControlName="to"
+            />
+            <div class="text-danger" *ngIf="leaveForm.touched && to.invalid">
+              To date is required
+            </div>
+          </div>
+
+          <div class="text-danger" *ngIf="!validDateRange">
+            Invalid date range
+          </div>
+
+          <div class="text-danger text-center" *ngIf="invalid.casualLeave">
+            Can't take casual leave more than 7 days
+          </div>
+          <div class="text-danger text-center" *ngIf="invalid.sickLeave">
+            Can't take sick leave more than 7 days
+          </div>
+          <div class="text-danger text-center" *ngIf="invalid.annualLeave">
+            Can't take annual leave more than 14 days
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="reason" class="form-label"
+            >Reason <span class="text-danger">*</span></label
+          >
+          <textarea
+            required
+            type="text"
+            class="form-control"
+            name="reason"
+            id="reason"
+            formControlName="reason"
+          ></textarea>
+          <div class="text-danger" *ngIf="leaveForm.touched && reason.invalid">
+            Leave reason is required
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="replacementEmployeeId" class="form-label"
+            >Select replacement <span class="text-danger">*</span></label
+          >
+          <select
+            class="form-select"
+            name="replacementEmployeeId"
+            id="replacementEmployeeId"
+            formControlName="replacementEmployeeId"
+            required
+          >
+            <option selected>Select replacement</option>
+            <option [value]="remp.id" *ngFor="let remp of replaceemployeeList">
+              {{ remp.firstName + " " + remp.lastName }}
+            </option>
+          </select>
+          <div
+            class="text-danger"
+            *ngIf="leaveForm.touched && replacementEmployeeId.invalid"
+          >
+            Replacement is required
+          </div>
+        </div>
+        <div class="w-100 my-3"></div>
+
+        <div class="d-flex justify-content-center">
+          <button
+            class="btn btn-secondary"
+            (click)="clear()"
+            [disabled]="isEdit"
+          >
+            Clear
+          </button>
+          <div class="mx-3"></div>
+          <button
+            class="btn btn-success"
+            type="submit"
+            [disabled]="leaveForm.invalid || validLeaveCounts(invalid)"
+          >
+            Apply
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
